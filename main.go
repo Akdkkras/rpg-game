@@ -7,121 +7,34 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/Akdkkras/rpg-game/internal/entity"
+	"github.com/Akdkkras/rpg-game/internal/infrastructure/loader"
+	"github.com/Akdkkras/rpg-game/internal/repository/memory"
 )
 
-type Location struct {
-	// TODO: Возможно, алиас не нужен на уровне сущности, а только на уровне файла конфигураций игры (пока что исп-ся только в кач-ве ключа в мапах на эту стр-ру)
-	Alias        string // Требования: уникальны
-	Title        string
-	Description  string
-	NextLocation string
-	Quests       []Quest
-}
-
-type Quest struct {
-	Title       string
-	Description string
-	// Alias    string // Пока что не нужен, но, возможно, пригодится в дальнейшем для связи с конкретным квестом
-	// TODO: По шагам внутри квеста будет запускаться новый, внутренний движок (как сейчас по локациям)
-	// QuestSteps 	[]QuestStep
-}
-
 type Game struct {
-	Locations  []Location
+	Locations  []entity.Location
 	StartAlias string
 }
 
-func startQuest(quest Quest) bool {
+func startQuest(quest entity.Quest) bool {
 	// TODO: реализовать
 	return false
 }
 
 func main() {
-	game := Game{
-		Locations: []Location{
-			{
-				Alias:        "tavern",
-				Title:        "Таверна",
-				Description:  "Тёплое и шумное место с запахом эля и жареного мяса. В углу играют в кости, а за стойкой хозяин протирает кружки.",
-				NextLocation: "dark_forest",
-				Quests: []Quest{
-					{
-						Title:       "Крысы в подвале",
-						Description: "Хозяин таверны просит избавиться от крыс в подвале.",
-					},
-					{
-						Title:       "Потерянное кольцо",
-						Description: "Посетитель обронил золотое кольцо где-то у барной стойки. Нужно его найти.",
-					},
-					{
-						Title:       "Пьяная драка",
-						Description: "Разнимите двух завсегдатаев, пока они не разнесли всю мебель.",
-					},
-				},
-			},
-			{
-				Alias:        "dark_forest",
-				Title:        "Тёмный лес",
-				Description:  "Густые деревья смыкаются над головой, почти не пропуская солнечный свет. Слышен хруст веток и далёкий волчий вой.",
-				NextLocation: "abandoned_castle",
-				Quests: []Quest{
-					{
-						Title:       "Сбор грибов",
-						Description: "Собрать редкие светящиеся грибы для местного алхимика.",
-					},
-					{
-						Title:       "Волчья стая",
-						Description: "Прогнать стаю свирепых волков, перегородивших тропу.",
-					},
-				},
-			},
-			{
-				Alias:        "abandoned_castle",
-				Title:        "Заброшенный замок",
-				Description:  "Старые каменные стены покрыты мхом и плющом. Внутри царит зловещая тишина, нарушаемая лишь скрипом половиц.",
-				NextLocation: "town_square",
-				Quests: []Quest{
-					{
-						Title:       "Призрачный рыцарь",
-						Description: "Упокоить дух древнего рыцаря, который до сих пор охраняет пустые залы.",
-					},
-				},
-			},
-			{
-				Alias:        "town_square",
-				Title:        "Городская площадь",
-				Description:  "Оживлённая площадь с фонтаном в центре. Торговцы зазывают покупателей, дети бегают между взрослыми, а на ступенях ратуши выступает менестрель.",
-				NextLocation: "finish",
-				Quests: []Quest{
-					{
-						Title:       "Украденное яблоко",
-						Description: "Поймать мальчишку, который стащил яблоко с прилавка торговца.",
-					},
-					{
-						Title:       "Песня менестреля",
-						Description: "Помочь менестрелю вспомнить забытые слова для его новой баллады.",
-					},
-				},
-			},
-		},
-		// TODO: стоит додумать, откуда получать стартовую локацию
-		StartAlias: "tavern",
+
+	// TODO: Обдумать, где и как определять начальную локацию
+	currentLocationAlias := "tavern"
+	locations, err := loader.LoadLocationsFromJSON("tmp")
+	if err != nil {
+		log.Fatalf("Ошибка: %v", err)
 	}
 
-	locations := make(map[string]Location)
-	for _, location := range game.Locations {
-		if _, ok := locations[location.Alias]; ok {
-			// TODO: можно избежать подобных проверок, провалидировов данные на все требования в одной функции перед в входом в движок (хз есть ли в этом смысл)
-			log.Fatal("Ошибка: Location.Alias обязан быть уникальным значением")
-		}
-		locations[location.Alias] = location
-	}
+	locationRepository := memory.NewMemoryLocationRepository(locations)
+	_ = locationRepository
 
-	currentLocationAlias := game.StartAlias
-	if currentLocationAlias == "" {
-		// TODO: можно избежать подобных проверок, провалидировов данные на все требования в одной функции перед в входом в движок (хз есть ли в этом смысл)
-		log.Fatal("Ошибка: стартовая локация не задана")
-	}
 	reader := bufio.NewReader(os.Stdin)
 
 	fmt.Println("=== ДОБРО ПОЖАЛОВАТЬ В ТЕКСТОВУЮ RPG ИГРУ ===\n")
