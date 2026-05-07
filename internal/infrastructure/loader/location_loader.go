@@ -6,10 +6,10 @@ func LoadLocationsFromJSON(filePath string) (map[string]*entity.Location, error)
 	// TODO: Заменить на JSON парсинг
 	store := map[string]*entity.Location{
 		"tavern": {
-			Alias:        "tavern",
-			Title:        "Таверна",
-			Description:  "Тёплое и шумное место с запахом эля и жареного мяса. В углу играют в кости, а за стойкой хозяин протирает кружки.",
-			NextLocation: "dark_forest",
+			Alias:             "tavern",
+			Title:             "Таверна",
+			Description:       "Тёплое и шумное место с запахом эля и жареного мяса. В углу играют в кости, а за стойкой хозяин протирает кружки.",
+			NextLocationAlias: "dark_forest",
 			Quests: []entity.Quest{
 				{
 					Title:       "Крысы в подвале",
@@ -26,10 +26,10 @@ func LoadLocationsFromJSON(filePath string) (map[string]*entity.Location, error)
 			},
 		},
 		"dark_forest": {
-			Alias:        "dark_forest",
-			Title:        "Тёмный лес",
-			Description:  "Густые деревья смыкаются над головой, почти не пропуская солнечный свет. Слышен хруст веток и далёкий волчий вой.",
-			NextLocation: "abandoned_castle",
+			Alias:             "dark_forest",
+			Title:             "Тёмный лес",
+			Description:       "Густые деревья смыкаются над головой, почти не пропуская солнечный свет. Слышен хруст веток и далёкий волчий вой.",
+			NextLocationAlias: "abandoned_castle",
 			Quests: []entity.Quest{
 				{
 					Title:       "Сбор грибов",
@@ -42,10 +42,10 @@ func LoadLocationsFromJSON(filePath string) (map[string]*entity.Location, error)
 			},
 		},
 		"abandoned_castle": {
-			Alias:        "abandoned_castle",
-			Title:        "Заброшенный замок",
-			Description:  "Старые каменные стены покрыты мхом и плющом. Внутри царит зловещая тишина, нарушаемая лишь скрипом половиц.",
-			NextLocation: "town_square",
+			Alias:             "abandoned_castle",
+			Title:             "Заброшенный замок",
+			Description:       "Старые каменные стены покрыты мхом и плющом. Внутри царит зловещая тишина, нарушаемая лишь скрипом половиц.",
+			NextLocationAlias: "town_square",
 			Quests: []entity.Quest{
 				{
 					Title:       "Призрачный рыцарь",
@@ -54,10 +54,10 @@ func LoadLocationsFromJSON(filePath string) (map[string]*entity.Location, error)
 			},
 		},
 		"town_square": {
-			Alias:        "town_square",
-			Title:        "Городская площадь",
-			Description:  "Оживлённая площадь с фонтаном в центре. Торговцы зазывают покупателей, дети бегают между взрослыми, а на ступенях ратуши выступает менестрель.",
-			NextLocation: "finish",
+			Alias:             "town_square",
+			Title:             "Городская площадь",
+			Description:       "Оживлённая площадь с фонтаном в центре. Торговцы зазывают покупателей, дети бегают между взрослыми, а на ступенях ратуши выступает менестрель.",
+			NextLocationAlias: "finish",
 			Quests: []entity.Quest{
 				{
 					Title:       "Украденное яблоко",

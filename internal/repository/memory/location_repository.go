@@ -1,6 +1,8 @@
 package memory
 
 import (
+	"errors"
+
 	"github.com/Akdkkras/rpg-game/internal/entity"
 	"github.com/Akdkkras/rpg-game/internal/repository"
 )
@@ -16,6 +18,9 @@ func NewMemoryLocationRepository(store map[string]*entity.Location) repository.L
 }
 
 func (r *locationRepository) GetLocationByAlias(alias string) (*entity.Location, error) {
-	//TODO implement me
-	panic("implement me")
+	location, ok := r.store[alias]
+	if !ok {
+		return nil, errors.New("локация не найдена")
+	}
+	return location, nil
 }
